@@ -18,3 +18,24 @@ jobs:
     steps:
       - name: Echo Username and Favorite Color
         run: echo "${{ github.event.inputs.username }} says hello, and favorite color is ${{ github.event.inputs.favorite_color }}"
+
+  say_thank_you:
+    runs-on: ubuntu-latest
+    needs: say_hello
+    outputs: 
+      thank_you: ${{steps.set-thank_you.outputs.thank_you}}
+    steps:
+      - name: Say Thank you
+        id: set-thank_you
+        run: GREETING="Hello, {{needs.say_hello.output.username}}"
+             echo "greeting=$GREETING" 
+
+  display-greeting:
+    runs-on: ubuntu-latest
+    needs: say_thank_you
+    steps:
+      - name: Display Greeting
+        run: echo "${{needs.say_thank_you.outputs.thank_you}}"
+          
+
+
