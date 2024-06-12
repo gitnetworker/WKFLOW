@@ -1,34 +1,56 @@
+#Name of the yaml workflow
 name: Dispatch Workflow
- 
+
+#trigger
 on:
   workflow_dispatch:
+  #inputs to be triggered
     inputs:
       username:
         description: 'Enter your username'
+        #Requirement that can't be passed
         required: true
+        #expected Answer
         default: 'Apulessian'
       favorite_color:
         description: 'Enter your favorite color'
         required: true
         default: 'Millenium Jade'
  
+ # Jobs to be run
 jobs:
+#1st job
   job1:
+  #AMI/OS version to be run on 
     runs-on: ubuntu-latest
+    #Output to be produced 
     outputs:
+    #Steps syntax
+    #Steps
+    #output_inputs
+    #outputs to be attached with the required username
       username: ${{ steps.output_inputs.outputs.username }}
       favorite_color: ${{ steps.output_inputs.outputs.favorite_color }}
+    #Steps to be followed
     steps:
+    # Steps name
       - name: Output Inputs
+      #Steps id
         id: output_inputs
+        #Steps to be ran in order
         run: |
           echo "username=${{ github.event.inputs.username }}" >> $GITHUB_OUTPUT
           echo "favorite_color=${{ github.event.inputs.favorite_color }}" >> $GITHUB_OUTPUT
+  #2nd job
   job2:
+  #AMI/OS version to be run on 
     runs-on: ubuntu-latest
+    #2nd job to be ran depending on job1
     needs: job1
+    #Outputs to be produced
     outputs:
       greeting: ${{ steps.generate_greeting.outputs.greeting }}
+    #Steps to be followed in order to produce the output
     steps:
       - name: Generate Greeting
         id: generate_greeting
